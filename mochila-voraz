@@ -1,0 +1,71 @@
+class Caja:
+    def __init__(self, codigo, peso, soles):
+        self.codigo = codigo
+        self.peso = peso
+        self.soles = soles
+
+    def valor_por_peso(self):
+        return self.soles / self.peso
+
+
+def llenar_mochila(lista_cajas, limite):
+
+    # Ordenar las cajas de acuerdo a su valor por kilogramo
+    lista_cajas.sort(
+        key=lambda caja: caja.valor_por_peso(),
+        reverse=True
+    )
+
+    peso_usado = 0
+    valor_total = 0
+
+    print("\nCajas que se llevarán:")
+
+    for caja in lista_cajas:
+
+        espacio = limite - peso_usado
+
+        if espacio <= 0:
+            break
+
+        # Se puede llevar la caja completa
+        if caja.peso <= espacio:
+            peso = caja.peso
+            valor = caja.soles
+            porcentaje = 100
+
+        # Solo se puede llevar una parte de la caja
+        else:
+            porcentaje = (espacio / caja.peso) * 100
+            peso = espacio
+            valor = caja.soles * (espacio / caja.peso)
+
+        peso_usado += peso
+        valor_total += valor
+
+        print(
+            f"Caja {caja.codigo}: "
+            f"{porcentaje:.2f}% | "
+            f"{peso:.2f} kg | "
+            f"S/ {valor:.2f}"
+        )
+
+    print("\nResultado:")
+    print(f"Peso total utilizado: {peso_usado:.2f} kg")
+    print(f"Valor total: S/ {valor_total:.2f}")
+
+
+cajas = [
+    Caja("A", 10, 100),
+    Caja("B", 5, 80),
+    Caja("C", 20, 150),
+    Caja("D", 8, 120),
+    Caja("E", 15, 180),
+    Caja("F", 4, 70),
+    Caja("G", 6, 90),
+    Caja("H", 3, 45)
+]
+
+m = float(input("Ingrese el peso máximo de la mochila (kg): "))
+
+llenar_mochila(cajas, m)
